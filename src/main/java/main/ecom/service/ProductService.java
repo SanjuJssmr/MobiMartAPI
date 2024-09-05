@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.bson.types.ObjectId;
 import main.ecom.model.Product;
 import main.ecom.repository.ProductRepo;
 
@@ -19,7 +19,7 @@ public class ProductService {
         return prodDb.findAll();
     }
 
-    public Optional<Product> getProdById(String id) {
+    public Optional<Product> getProdById(ObjectId id) {
         return prodDb.findById(id);
     }
 

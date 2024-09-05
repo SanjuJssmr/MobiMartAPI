@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import main.ecom.model.User;
 import main.ecom.repository.UserRepo;
+import org.bson.types.ObjectId;
 
 @Service
 public class UserService {
@@ -18,7 +19,7 @@ public class UserService {
         return userDb.findAll();
     }
 
-    public Optional<User> getUserById(String id) {
+    public Optional<User> getUserById(ObjectId id) {    
         return userDb.findById(id);
     }
 

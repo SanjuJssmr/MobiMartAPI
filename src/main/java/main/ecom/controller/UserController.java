@@ -19,7 +19,7 @@ import main.ecom.model.User;
 import main.ecom.service.UserService;
 import main.ecom.util.Auth;
 import main.ecom.util.JwtUtil;
-
+import org.bson.types.ObjectId;
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @PostMapping("/verifyOtp/{id}")
-    public ResponseEntity<Map<String, Object>> verifyOTP(@PathVariable String id, @RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> verifyOTP(@PathVariable ObjectId id, @RequestBody User user) {
         Optional<User> obj = userService.getUserById(id);
         if (!obj.isPresent() || obj.get().getStatus() == 1) {
             response.put("status", 0);
@@ -102,7 +102,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable String id) {
+    public Optional<User> getUserById(@PathVariable ObjectId id) {
         return userService.getUserById(id);
     }
 
