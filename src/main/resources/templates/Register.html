@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Registration Successfull</title>
+</head>
+<style>
+    body {
+        font-family: monospace;
+        background-color: #f6f6f6;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+    .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        padding: 20px;
+    }
+</style>
+
+<body>
+    <section class="email-container">
+        <h1 style="font-size: 24px;">Dear <span style="color: #f59e0b; text-transform: uppercase;"th:text="${userName}">hyy</span></h1>
+        <p>Congratulation on your registration for MobiMart🎉, We warmly welcomes you!</p>
+        <p>What next? Verify your email with below OTP:</p>
+        <center style="font-size: 40px; text-align: center; width: fit-content; align-items: center; font-weight: 800; border: solid 1px; border-radius: 8px; padding: 7px;"
+            th:text="${otp}"></center>
+        <p>Regards,</p>
+        <p style="color: #f59e0b; font-weight: 700;">MobiMart</p>
+    </section>
+</body>
+
+</html>

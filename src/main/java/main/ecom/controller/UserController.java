@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import main.ecom.model.Product;
 import main.ecom.model.User;
+import main.ecom.service.EmailService;
 import main.ecom.service.UserService;
 import main.ecom.util.Auth;
 import main.ecom.util.JwtUtil;
-import org.bson.types.ObjectId;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -27,6 +31,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailService mailService;
     @Autowired
     private Auth auth;
     @Autowired
@@ -49,17 +55,21 @@ public class UserController {
         }
         user.setOtp(auth.generateOtp());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.saveUser(user);
+        User createdUser = userService.saveUser(user);
         response.put("status", 1);
         response.put("response", "Registration successfull");
-
+        response.put("userId", createdUser.get_id().toString());
+        Map<String, Object> emailPayload = new HashMap<>();
+        emailPayload.put("userName", createdUser.getUserName());
+        emailPayload.put("otp", createdUser.getOtp());
+        mailService.sendHtmlMessage(emailPayload, "Register", createdUser.getEmail(), "Verify OTP");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/verifyOtp/{id}")
     public ResponseEntity<Map<String, Object>> verifyOTP(@PathVariable ObjectId id, @RequestBody User user) {
         Optional<User> obj = userService.getUserById(id);
-        if (!obj.isPresent() || obj.get().getStatus() == 1) {
+        if (!obj.isPresent()) {
             response.put("status", 0);
             response.put("response", "Invalid Request");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -97,6 +107,8 @@ public class UserController {
         response.put("status", 1);
         response.put("response", "Login successfull");
         response.put("token", token);
+        response.put("role", obj.get().getRole());
+        response.put("userId", obj.get().get_id());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -106,4 +118,14 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @PostMapping("/addToCard")
+    public ResponseEntity<Map<String, Object>> addToCard(@RequestBody User user) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("card", user.getCard());
+        userService.updateMultipleFields(user.get_id().toString(), updates);
+        response.put("status", 1);
+        response.put("response", "Added to card");
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }

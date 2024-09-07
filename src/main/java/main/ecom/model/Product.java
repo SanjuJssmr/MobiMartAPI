@@ -23,12 +23,11 @@ import lombok.NoArgsConstructor;
 public class Product {
     @Id
     private ObjectId _id;
-    private ObjectId userId;
     private String prodName;
     private String prodType;
     private Integer price;
     private Integer quantity;
-    private String company;
+    private String brand;
     private Integer status = 1;
     private String image;
     @CreatedDate

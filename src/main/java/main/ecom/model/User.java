@@ -30,6 +30,8 @@ public class User {
     private String city;
     private String state;
     private Integer status = 0;
+    private Integer role = 1;
+    private int[] card = {};
     @CreatedDate
     @Field("createdAt")
     private Instant createdAt;
